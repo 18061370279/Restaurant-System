@@ -1,0 +1,104 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.List;
+public class menu {
+    //声明两个集合，第一个用来保存 饭店菜单，第二个用来保存 客户所点菜单
+    static List<menu>DishList=new ArrayList<>();
+    static List<menu>personList=new ArrayList<>();
+    int id;
+    String name;
+    double price;
+    //构造方法，每一个菜 都是一个对象
+    public menu(int id,String name,double price){
+        this.id=id;
+        this.name=name;
+        this.price=price;
+    }
+    public static void main(String[] args){
+        //往数组里新添菜品
+        DishList.add(new menu(1,"清蒸松露鹅肝佐黑菌汁鹅肝",700));
+        DishList.add(new menu(2,"森林中的樱桃",521));
+        DishList.add(new menu(3,"卡布奇诺蜗牛蘑菇浓汤",600));
+        DishList.add(new menu(4,"香煎羊排配菌菇土豆泥蔬菜",580));
+        DishList.add(new menu(5,"低温鹅肝配青苹果",870));
+        Scanner sc=new Scanner(System.in);
+        while (true){
+            number();
+            int num=sc.nextInt();
+            switch (num){
+                case 1:
+                    while (true)
+                    {
+                        showDish();
+                        int id= sc.nextInt();
+                        if(id==0){
+                            break;
+                        }
+                        else {
+                            menu dish=DishList.get(id-1);
+                            System.out.println("亲，您点了："+dish.name+"菜");
+                            personList.add(dish);//个人菜单中添加这个元素
+                        }
+                    }
+                case 2:
+                    showOrder();
+                    break;
+                case 3 :
+                    int num1=sc.nextInt();
+                    paying();
+                    return;//而在结账以后，我们需要结束这个点菜系统 使用 return 就会直接 这个程序
+                case 4:
+                    System.out.println("输入您要退掉菜品的编号：");
+                    int id= sc.nextInt();
+                    existDish(id);
+                    break;
+            }
+        }
+    }
+    // 展示主菜单方法
+    public static void number(){
+        System.out.println("欢迎来到米其林五星级餐厅！！！\n" +
+                "我们将为您服务！！！\n");
+        System.out.println("----主菜单----");
+        System.out.println("菜单点菜 ---> 1");
+        System.out.println("显示已点菜品 ---> 2");
+        System.out.println("结账 ---> 3");
+        System.out.println("退菜 ---> 4");
+        System.out.println("---根据编号选择服务---");
+    }
+    //展示客户已点菜单
+    public static void showDish(){
+        System.out.println("----请您点菜----");
+        //遍历集合，将之前声明的对象集合 全部展示到控制台
+        for(int i=0;i<DishList.size();i++){
+            menu dish=DishList.get(i);
+            System.out.println(dish.id+"\t"+dish.name+"\t"+ dish.price+"元");
+        }
+        System.out.println("---根据序号点菜，按 0 返回上一级---");
+    }
+    //展示客户已点菜单
+    public static void showOrder(){
+        System.out.println("----您已点菜品----");
+        //为了方便客户能够正确的选择菜品编号，我们采用 1  2 3 4 的顺序输出已点菜品
+        for(int i=0;i<personList.size();i++){
+            System.out.println((i+1)+"\t"+personList.get(i).name+"\t"+personList.get(i).price+"元");
+        }
+    }
+    // 结账 遍历 personList 集合的 price 累加即可
+    public static void paying(){
+        System.out.println("请问您是选择支付宝、微信还是银行卡？");
+        System.out.println("如果是支付宝，请选择1，微信选择2，银行选择3！");
+        double sum=0f;
+        System.out.println("----正在结账，请稍等！----");
+        for (menu dish:personList){
+            sum+= dish.price;
+        }
+        System.out.println("您共消费：" + sum + "元");
+    }
+    //退菜操作  使用集合的 remove 方法。 采用有参数的方法。先告诉客户要退掉的菜品，再执行remove操作，这两句代码不能颠倒
+    public static void existDish(int i){
+        System.out.println("您已退掉："+personList.get(i-1).name+personList.get(i-1).price+"元");
+        personList.remove(i-1);
+    }
+}
